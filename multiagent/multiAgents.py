@@ -68,59 +68,15 @@ class ReflexAgent(Agent):
     newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
     "*** YOUR CODE HERE ***"
-    
-    score = 0;
-    
-    "Considering win on sucessor game state"
-    if successorGameState.isWin():
-      return float('inf')
-    if successorGameState.isLose():
-      return float('-inf')
-    
-    "Considering ghost position"
-    ghostScore = 0
-    ghostDist = []
-    for ghost in newGhostStates:
-      if ghost.scaredTimer == 0:
-        ghostDist += [util.manhattanDistance(newPos, ghost.getPosition())]
-    ghostScore = min(ghostDist)
 
-    if ghostScore == 0:
-      return float('-inf')
+    foodDistance = [manhattanDistance(newPos, foodPos) for foodPos in oldFood.asList()]
+    minFoodDistance = min(foodDistance)
 
-    "Considering ghost remaining time as scared ghosts"
-    scaredTimeScore = 0
-    for scaredTime in newScaredTimes:
-      scaredTimeScore += scaredTime
+    ghostsPositions = [ghost.getPosition() for ghost in newGhostStates]
+    ghostsDistance = [manhattanDistance(newPos, ghostPos) for ghostPos in ghostsPositions]
+    minGhostDistance = min(ghostsDistance)
 
-    "Considering food position in sucessor state"
-    foodScore = 0
-    foodDist = []
-    foods = successorGameState.getFood().asList()
-    for food in foods:
-      foodDist += [util.manhattanDistance(newPos, food)]
-    foodScore = min(foodDist)
-    foodScore = 1/foodScore
-    
-    "Considering number of remaining food between actual and sucessor state"
-    remainingFoodScore = 0
-    if successorGameState.getFood() < currentGameState.getFood():
-        remainingFoodScore += 10
-    
-    "Considering if capsule is eaten on next state"
-    capsuleConsumedScore = 0
-    if successorGameState.getPacmanPosition() in currentGameState.getCapsules():
-      capsuleConsumedScore += 10
-    
-    "Considering sucessor state action (STOP gets punished)"
-    stopScore = 0
-    if action == Directions.STOP:
-      stopScore -= 10
-
-    "Combining every score"
-    score = successorGameState.getScore() + foodScore/ghostScore + remainingFoodScore*10 + scaredTimeScore + capsuleConsumedScore*10 + stopScore
-    
-    return score
+    return 1/(minFoodDistance+0.1) - 1/(minGhostDistance+0.1)
 
 def scoreEvaluationFunction(currentGameState):
   """
@@ -178,9 +134,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns the total number of agents in the game
     """
     "*** YOUR CODE HERE ***"
-    
-    
-    
+
+
+
     util.raiseNotDefined()
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -238,4 +194,3 @@ class ContestAgent(MultiAgentSearchAgent):
     """
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
-
