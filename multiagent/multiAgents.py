@@ -11,6 +11,8 @@ from game import Directions
 import random, util
 
 from game import Agent
+from ghostAgents import RandomGhost
+
 
 class ReflexAgent(Agent):
   """
@@ -176,7 +178,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
         maxScore = score
         maxAction = action
 
-    print maxScore
     return maxAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -244,7 +245,6 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         maxScore = score
         maxAction = action
 
-    print maxScore
     return maxAction
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
@@ -260,7 +260,48 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
       legal moves.
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    def isPacmanTurn(agentIndex):
+      if agentIndex == 0:
+        return True
+      else:
+        return False
+
+
+    def expectminimax(gameState, it):
+      numAgents = gameState.getNumAgents()
+      agentIndex = it % numAgents
+      limit = self.depth * numAgents
+
+      if it == limit:
+        return self.evaluationFunction(gameState)
+
+      if gameState.isLose() or gameState.isWin():
+        return self.evaluationFunction(gameState)
+
+      actions = gameState.getLegalActions(agentIndex)
+      successors = [gameState.generateSuccessor(agentIndex, action) for action in actions]
+      scores = []
+
+      for successor in successors:
+        scores.append(expectminimax(successor, it+1))
+
+      if isPacmanTurn(agentIndex):
+        return max(scores)
+      else:
+        return sum(scores) / len(scores)
+
+    maxScore = float('-inf')
+    maxAction = ''
+
+    for action in gameState.getLegalActions(0):
+      state =  gameState.generateSuccessor(0, action)
+      score = expectminimax(state, 1)
+
+      if score > maxScore:
+        maxScore = score
+        maxAction = action
+
+    return maxAction
 
 def betterEvaluationFunction(currentGameState):
   """
