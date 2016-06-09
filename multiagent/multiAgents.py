@@ -135,9 +135,48 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
     "*** YOUR CODE HERE ***"
 
+    def isPacmanTurn(agentIndex):
+      if agentIndex == 0:
+        return True
+      else:
+        return False
 
 
-    util.raiseNotDefined()
+    def minimax(gameState, it):
+      numAgents = gameState.getNumAgents()
+      agentIndex = it % numAgents
+      limit = self.depth * numAgents
+
+      if it == limit:
+        return self.evaluationFunction(gameState)
+
+      if gameState.isLose() or gameState.isWin():
+        return self.evaluationFunction(gameState)
+
+      actions = gameState.getLegalActions(agentIndex)
+      successors = [gameState.generateSuccessor(agentIndex, action) for action in actions]
+      scores = []
+
+      for successor in successors:
+        scores.append(minimax(successor, it+1))
+
+      if isPacmanTurn(agentIndex):
+        return max(scores)
+      else:
+        return min(scores)
+
+    maxScore = float('-inf')
+    maxAction = ''
+
+    for action in gameState.getLegalActions(0):
+      state =  gameState.generateSuccessor(0, action)
+      score = minimax(state, 1)
+
+      if score > maxScore:
+        maxScore = score
+        maxAction = action
+
+    return maxAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
   """
