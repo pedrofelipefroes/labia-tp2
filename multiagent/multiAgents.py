@@ -176,6 +176,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         maxScore = score
         maxAction = action
 
+    print maxScore
     return maxAction
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -188,7 +189,63 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
       Returns the minimax action using self.depth and self.evaluationFunction
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    def isPacmanTurn(agentIndex):
+      if agentIndex == 0:
+        return True
+      else:
+        return False
+
+
+    def alphabeta(gameState, it, a, b):
+      numAgents = gameState.getNumAgents()
+      agentIndex = it % numAgents
+      limit = self.depth * numAgents
+
+      if it == limit:
+        return self.evaluationFunction(gameState)
+
+      if gameState.isLose() or gameState.isWin():
+        return self.evaluationFunction(gameState)
+
+      actions = gameState.getLegalActions(agentIndex)
+      successors = [gameState.generateSuccessor(agentIndex, action) for action in actions]
+      scores = []
+
+      if isPacmanTurn(agentIndex):
+        v = float('-inf')
+
+        for successor in successors:
+          v = max(v, alphabeta(successor, it+1, a, b))
+          a = max(a, v)
+          if b <= a:
+            break
+
+        return v
+
+      else:
+        v = float('inf')
+
+        for successor in successors:
+          v = min(v, alphabeta(successor, it+1, a, b))
+          b = min(b, v)
+          if b <= a:
+            break
+
+        return v
+
+    maxScore = float('-inf')
+    maxAction = ''
+
+    for action in gameState.getLegalActions(0):
+      state =  gameState.generateSuccessor(0, action)
+      score = alphabeta(state, 1, float('-inf'), float('inf'))
+
+      if score > maxScore:
+        maxScore = score
+        maxAction = action
+
+    print maxScore
+    return maxAction
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
   """
