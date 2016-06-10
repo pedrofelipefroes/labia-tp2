@@ -114,22 +114,34 @@ A poda alfa-beta foi construída de maneira similar ao _minimax_, adicionando os
 
 Os valores de alfa e beta são inicializados como -∞ e +∞, respectivamente. Enquanto o Pac-Man escolhe o valor `max` entre os sucessores, parando a avaliação quando `b <= a`, os fantasmas realizam o mesmo procedimento, porém considerando o valor `min`.
 
-Houve um aumento significativo na velocidade de execução do algoritmo devido à poda. Executando com a semente fixa o `MinimaxAgent` e o `AlphaBetaAgent` na profundidade 4, é possível verificar que o tempo gasto para o _minimax_ é quase o dobro de tempo gasto para a poda.
+Houve um aumento significativo na velocidade de execução do algoritmo devido à poda. Executando com a semente fixa o `MinimaxAgent` e o `AlphaBetaAgent` na profundidade 4, é possível verificar que o tempo gasto para o _minimax_ é quase **seis vezes** o tempo gasto para a poda.
 
-`time python pacman.py -p -a -f -q MinimaxAgent -a depth=4 -l smallClassic`
-
-```
-real	0m0.121s
-user	0m0.045s
-sys	    0m0.046s
-```
-
-`time python pacman.py -p -a -f -q AlphaBetaAgent -a depth=4 -l smallClassic`
+`time python pacman.py -p MinimaxAgent -l smallClassic -a depth=4 -f -q`
 
 ```
-real	0m0.071s
-user	0m0.043s
-sys	    0m0.023s
+Pacman emerges victorious! Score: 1342
+Average Score: 1342.0
+Scores:        1342
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+real	2m51.603s
+user	2m48.780s
+sys		0m1.084s
+```
+
+`time python pacman.py -p AlphaBetaAgent -l smallClassic -a depth=4 -f -q`
+
+```
+Pacman emerges victorious! Score: 1342
+Average Score: 1342.0
+Scores:        1342
+Win Rate:      1/1 (1.00)
+Record:        Win
+
+real	0m32.203s
+user	0m31.965s
+sys		0m0.138s
 ```
 
 Além disso, foi possível verificar que os valores do estado inicial da poda alfa-beta continuam os mesmos do _minimax_, como era esperado.
