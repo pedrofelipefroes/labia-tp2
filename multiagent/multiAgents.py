@@ -177,6 +177,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
       if score > maxScore:
         maxScore = score
         maxAction = action
+    
+    print maxScore
 
     return maxAction
 
